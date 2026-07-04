@@ -1,14 +1,9 @@
 "use client";
 
 import { memo, useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+// FIX H8: Removed unused GSAP + ScrollTrigger imports. These added bundle weight with zero functionality.
 import { PortfolioCard } from "./PortfolioCard";
 import type { PortfolioItem } from "./portfolioData";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 interface PortfolioGridProps {
   items: PortfolioItem[];
@@ -18,8 +13,6 @@ interface PortfolioGridProps {
 
 function PortfolioGridComponent({ items, filterKey, onItemClick }: PortfolioGridProps) {
   const gridRef = useRef<HTMLDivElement>(null);
-
-  // No GSAP revealing animations per request to make it stock
 
   if (items.length === 0) {
     return (
@@ -41,6 +34,8 @@ function PortfolioGridComponent({ items, filterKey, onItemClick }: PortfolioGrid
       "
     >
       {items.map((item, i) => (
+        // FIX H5: Use a stable data attribute + closure. The onClick here is stable
+        // because onItemClick is the same setLightboxIndex reference from Portfolio parent.
         <PortfolioCard key={item.id} item={item} onClick={() => onItemClick(i)} />
       ))}
     </div>

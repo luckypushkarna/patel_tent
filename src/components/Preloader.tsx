@@ -10,13 +10,17 @@ interface PreloaderProps {
   onComplete?: () => void;
 }
 
+// FIX M3: ReactDOM.preload must be called once at module level — NOT inside a
+// component body. Calling it inside the component calls it on every render.
+if (typeof window !== "undefined") {
+  ReactDOM.preload("/lottie/loading.lottie", { as: "fetch", crossOrigin: "anonymous" });
+}
+
 export const Preloader = memo(function Preloader({
   duration = 1800,
   exitDelay = 180,
   onComplete,
 }: PreloaderProps) {
-  // Preload the lottie file immediately so it's ready when the component mounts
-  ReactDOM.preload("/lottie/loading.lottie", { as: "fetch", crossOrigin: "anonymous" });
 
   const [isExiting, setIsExiting] = useState(false);
   const [isVisible, setIsVisible] = useState(true);

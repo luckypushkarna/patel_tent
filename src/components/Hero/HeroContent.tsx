@@ -1,61 +1,65 @@
 "use client";
 
-import { memo, useRef, useState } from "react";
+import { memo, useMemo, useRef } from "react";
 import {
   motion,
-  useScroll,
   useTransform,
   useReducedMotion,
-  useSpring,
-  useMotionValueEvent,
+  type MotionValue,
 } from "framer-motion";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
 import { ArrowRight } from "lucide-react";
 
-function HeroContentComponent() {
+interface HeroContentProps {
+  scrollY: MotionValue<number>;
+}
+
+function HeroContentComponent({ scrollY }: HeroContentProps) {
   const heroRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
 
-  /* ─── Scroll progress tied to the hero section ─────────────────────── */
-  const { scrollY } = useScroll();
+  // Memoize viewport height — read ONCE, not on every render.
+  // Recalculated only if window resizes (handled via resize listener if needed).
+  const vh = useMemo(
+    () => (typeof window !== "undefined" ? window.innerHeight : 800),
+    []
+  );
 
-  // Responsive translation amounts
-  const getY = (desktop: number, tablet: number, mobile: number) => {
-    if (typeof window === "undefined") return desktop;
+  // Memoize translation amounts — read window.innerWidth ONCE at mount
+  const yAmounts = useMemo(() => {
+    if (typeof window === "undefined") return { heading: 60, sub: 45, cta: 30, trust: 12, preview: 20 };
     const w = window.innerWidth;
-    if (w < 640) return mobile;
-    if (w < 1024) return tablet;
-    return desktop;
-  };
+    const scale = w < 640 ? 0 : w < 1024 ? 0.67 : 1;
+    return {
+      heading: Math.round((60 - 32) * scale + 32),
+      sub:     Math.round((45 - 22) * scale + 22),
+      cta:     Math.round((30 - 16) * scale + 16),
+      trust:   Math.round((12 - 6) * scale + 6),
+      preview: Math.round((20 - 10) * scale + 10),
+    };
+  }, []);
 
   /* ─── Per-element transforms ────────────────────────────────────────── */
-  const vh = typeof window !== "undefined" ? window.innerHeight : 800;
-
-  // Heading: fade 0→35% of 100dvh
   const headingOpacity = useTransform(scrollY, [0, vh * 0.30], [1, 0]);
-  const headingY = useTransform(scrollY, [0, vh * 0.35], [0, -(getY(60, 40, 28))]);
-  const headingScale = useTransform(scrollY, [0, vh * 0.35], [1, 0.97]);
+  const headingY       = useTransform(scrollY, [0, vh * 0.35], [0, -yAmounts.heading]);
+  const headingScale   = useTransform(scrollY, [0, vh * 0.35], [1, 0.97]);
 
-  // Sub: slightly faster fade, less movement
   const subOpacity = useTransform(scrollY, [0, vh * 0.25], [1, 0]);
-  const subY = useTransform(scrollY, [0, vh * 0.30], [0, -(getY(45, 32, 22))]);
+  const subY       = useTransform(scrollY, [0, vh * 0.30], [0, -yAmounts.sub]);
 
-  // CTAs
   const ctaOpacity = useTransform(scrollY, [0, vh * 0.22], [1, 0]);
-  const ctaY = useTransform(scrollY, [0, vh * 0.28], [0, -(getY(30, 22, 16))]);
-  const ctaScale = useTransform(scrollY, [0, vh * 0.28], [1, 0.98]);
+  const ctaY       = useTransform(scrollY, [0, vh * 0.28], [0, -yAmounts.cta]);
+  const ctaScale   = useTransform(scrollY, [0, vh * 0.28], [1, 0.98]);
 
-  // Trust line: fades first, barely moves
   const trustOpacity = useTransform(scrollY, [0, vh * 0.18], [1, 0]);
-  const trustY = useTransform(scrollY, [0, vh * 0.20], [0, -(getY(12, 9, 6))]);
+  const trustY       = useTransform(scrollY, [0, vh * 0.20], [0, -yAmounts.trust]);
 
-  // Gallery preview
   const previewOpacity = useTransform(scrollY, [0, vh * 0.20], [1, 0]);
-  const previewY = useTransform(scrollY, [0, vh * 0.25], [0, -(getY(20, 14, 10))]);
+  const previewY       = useTransform(scrollY, [0, vh * 0.25], [0, -yAmounts.preview]);
 
-  // Scroll indicator fade
   const scrollIndicatorOpacity = useTransform(scrollY, [0, 50], [1, 0]);
-  const scrollIndicatorY = useTransform(scrollY, [0, 50], [0, -4]);
+  const scrollIndicatorY       = useTransform(scrollY, [0, 50], [0, -4]);
+
   const handleScrollToGallery = () => {
     document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -64,7 +68,7 @@ function HeroContentComponent() {
   };
 
   /* ─── Entrance animation variants ──────────────────────────────────── */
-  const entrance = {
+  const entrance = useMemo(() => ({
     hidden: { opacity: 0, y: prefersReduced ? 0 : 24 },
     show: (custom: number) => ({
       opacity: 1,
@@ -75,7 +79,7 @@ function HeroContentComponent() {
         ease: [0.22, 0.61, 0.36, 1] as const,
       },
     }),
-  };
+  }), [prefersReduced]);
 
   /* When reduced-motion is on, skip transforms — only fade */
   const reducedStyle = { opacity: 1, y: 0, scale: 1 };

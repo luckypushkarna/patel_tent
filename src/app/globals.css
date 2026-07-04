@@ -77,7 +77,8 @@ body {
   /* Consistent font rendering across browsers */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  /* text-rendering: optimizeLegibility removed — causes layout cost on every
+     text node on Android Chrome. Scope to headings only if needed. */
   /* Prevent horizontal overflow */
   overflow-x: hidden;
   max-width: 100vw;
@@ -95,9 +96,8 @@ label {
 }
 
 /* ── Minimum touch target sizes (iOS HIG: 44px, Android: 48dp) ─────────── */
-button,
-[role="button"],
-a {
+/* Scoped to role=button only — not all <a> tags, which breaks inline text links */
+[role="button"] {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -111,8 +111,9 @@ textarea {
 }
 
 /* ── CSS containment — speeds up layout calculations in repeated sections ─ */
+/* contain:style removed — it breaks CSS custom property inheritance in some browsers */
 section {
-  contain: layout style;
+  contain: layout;
 }
 
 /* ── Images — prevent layout shift ─────────────────────────────────────── */

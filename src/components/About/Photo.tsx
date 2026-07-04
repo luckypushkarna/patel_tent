@@ -1,9 +1,15 @@
 "use client";
 
-import { memo, useEffect, useRef } from "react";
+import { memo } from "react";
 
 import { CloudinaryImage } from "@/components/CloudinaryImage";
 import { CloudinaryVideo } from "@/components/CloudinaryVideo";
+
+// FIX H4: Removed the empty useEffect(() => {}, []) — it was a leftover from
+// the GSAP removal and served no purpose. Every empty useEffect adds a
+// React reconciler subscription with no benefit.
+// FIX: Also removed unused wrapperRef and mediaRef that were held purely
+// for the old GSAP animation.
 
 interface PhotoProps {
   src?: string;
@@ -32,38 +38,36 @@ function PhotoComponent({
   width,
   height,
 }: PhotoProps) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const mediaRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Heavy GSAP scroll scrub animations have been removed to prevent 60fps to 20fps drops.
-    // The image/video simply renders statically now, significantly improving scroll performance.
-  }, []);
+  const objPos =
+    objectPosition === "bottom"
+      ? "object-bottom"
+      : objectPosition === "top"
+      ? "object-top"
+      : "object-center";
 
   return (
     <div
-      ref={wrapperRef}
       className={`relative w-full overflow-hidden rounded-2xl bg-[#DDD5C9] ${className}`}
       style={{ aspectRatio: ratio }}
       aria-label={!src ? alt : undefined}
     >
       {src ? (
         isVideo ? (
-          <div ref={mediaRef} className="absolute inset-0 h-full w-full">
-            <CloudinaryVideo 
-              publicId={src} 
+          <div className="absolute inset-0 h-full w-full">
+            <CloudinaryVideo
+              publicId={src}
               width={width}
-              className={`w-full h-full object-${objectFit} ${objectPosition === 'bottom' ? 'object-bottom' : objectPosition === 'top' ? 'object-top' : 'object-center'}`} 
+              className={`w-full h-full object-${objectFit} ${objPos}`}
             />
           </div>
         ) : (
-          <div ref={mediaRef} className="absolute inset-0 h-full w-full">
-            <CloudinaryImage 
-              publicId={src} 
-              alt={alt} 
+          <div className="absolute inset-0 h-full w-full">
+            <CloudinaryImage
+              publicId={src}
+              alt={alt}
               width={width}
               height={height}
-              className={`w-full h-full object-${objectFit} ${objectPosition === 'bottom' ? 'object-bottom' : objectPosition === 'top' ? 'object-top' : 'object-center'}`} 
+              className={`w-full h-full object-${objectFit} ${objPos}`}
               loading={loading}
               fetchPriority={fetchPriority}
             />

@@ -1,14 +1,10 @@
 "use client";
 
 import { memo, useEffect, useRef } from "react";
+// FIX M4: Removed dead GSAP + ScrollTrigger imports — they were imported but the
+// comment in this file already said "GSAP scroll zoom removed to make it stock".
 import type { PortfolioItem } from "./portfolioData";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 interface PortfolioCardProps {
   item: PortfolioItem;
@@ -18,8 +14,6 @@ interface PortfolioCardProps {
 function PortfolioCardComponent({ item, onClick }: PortfolioCardProps) {
   const cardRef = useRef<HTMLElement>(null);
   const imgRef = useRef<HTMLDivElement>(null);
-
-  // GSAP scroll zoom removed to make it stock; only CSS hover zoom remains.
 
   return (
     <article

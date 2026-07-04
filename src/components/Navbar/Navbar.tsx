@@ -126,10 +126,9 @@ export const Navbar = memo(function Navbar() {
           ref={navRef}
           className={`
             absolute inset-x-0 top-0
-            transition-all duration-300 ease-out
-            will-change-[background-color,border-color,backdrop-filter]
+            transition-[background-color,border-color] duration-300 ease-out
             ${isScrolled
-              ? "bg-[rgba(24,20,18,0.98)] md:bg-[rgba(24,20,18,0.85)] md:backdrop-blur-[18px] border-b border-white/[0.07] shadow-[0_1px_0_0_rgba(255,255,255,0.04)]"
+              ? "bg-[rgba(22,18,14,0.97)] border-b border-white/[0.07] shadow-[0_1px_0_0_rgba(255,255,255,0.04)]"
               : "bg-transparent border-b border-transparent"
             }
           `}

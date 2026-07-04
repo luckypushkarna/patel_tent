@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useRef } from "react";
+import { memo, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import type { Service } from "./servicesData";
 
@@ -17,11 +17,41 @@ interface ServiceCardProps {
 
 function ServiceCardComponent({ service, index }: ServiceCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLDivElement>(null);
+  const lottieWrapperRef = useRef<HTMLDivElement>(null);
   const Icon = service.icon;
 
   const isFeatured = service.span === "featured";
   const isWide = service.span === "wide";
+
+  // FIX C3: Only play Lottie when the card is visible in the viewport.
+  // This prevents all 6 Lottie instances from running their JS animation
+  // loops simultaneously when most are off-screen.
+  useEffect(() => {
+    const wrapper = lottieWrapperRef.current;
+    if (!wrapper) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // DotLottiePlayer renders a <dotlottie-player> custom element
+          const player = wrapper.querySelector("dotlottie-player") as HTMLElement & {
+            play?: () => void;
+            pause?: () => void;
+          };
+          if (!player) return;
+          if (entry.isIntersecting) {
+            player.play?.();
+          } else {
+            player.pause?.();
+          }
+        });
+      },
+      { rootMargin: "100px 0px" }
+    );
+
+    observer.observe(wrapper);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div
@@ -38,7 +68,11 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
       `}
     >
       {/* Background Lottie Wrapper */}
-      <div ref={imgRef} className="absolute inset-0 z-0 w-full h-full will-change-transform pointer-events-none opacity-70">
+      {/* FIX C4: Removed permanent will-change-transform. Only GPU-promote during hover via CSS. */}
+      <div
+        ref={lottieWrapperRef}
+        className="absolute inset-0 z-0 w-full h-full pointer-events-none opacity-70"
+      >
         <DotLottiePlayer
           src={service.lottie}
           loop
@@ -47,7 +81,6 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
           style={{ width: "100%", height: "100%" }}
         />
       </div>
-
 
       {/* Giant watermark number — 3% opacity behind content */}
       <span
@@ -86,7 +119,7 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
               {service.number}
             </span>
             <span className="h-px w-3 md:w-4 bg-[#032B53]/20" aria-hidden="true" />
-            <span 
+            <span
               className="text-[12px] md:text-[13px] font-semibold uppercase tracking-[0.22em] text-[#032B53]/60"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >

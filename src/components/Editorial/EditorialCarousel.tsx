@@ -1,15 +1,10 @@
 "use client";
 
-import { memo, useEffect } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { memo } from "react";
+// FIX H8: Removed unused GSAP + ScrollTrigger imports. They were imported but never used.
 import { EditorialCard } from "./EditorialCard";
 import { useCarousel } from "@/hooks/useCarousel";
 import type { EditorialItem } from "./editorialData";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 interface EditorialCarouselProps {
   items: readonly EditorialItem[];
@@ -32,8 +27,6 @@ function EditorialCarouselComponent({
     scrollPrev,
     scrollNext,
   } = useCarousel();
-
-  // No GSAP revealing animations per request to make it stock
 
   return (
     <>

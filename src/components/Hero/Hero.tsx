@@ -10,6 +10,7 @@ import { About } from "../About";
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null);
 
+  // Single shared scroll instance — passed to both HeroBackground and HeroContent
   const { scrollY } = useScroll();
   const vh = typeof window !== "undefined" ? window.innerHeight : 800;
 
@@ -30,11 +31,9 @@ export function Hero() {
           <HeroBackground overlayOpacity={overlayOpacity} />
         </div>
 
-        {/* Hero text content — individual element fades handled inside HeroContent */}
+        {/* Hero text content — scroll-driven fades handled inside HeroContent */}
         <div className="absolute inset-0 w-full h-full flex items-center justify-center">
-          <div className="w-full">
-            <HeroContent />
-          </div>
+          <HeroContent scrollY={scrollY} />
         </div>
 
         {/* Wedding Divider anchored to bottom of Hero */}

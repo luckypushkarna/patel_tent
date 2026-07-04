@@ -93,15 +93,13 @@ const NavButton = memo(
     const variants = {
       overlay: `
         w-10 h-10 sm:w-12 sm:h-12
-        bg-black/40 text-white
-        hover:bg-black/60 active:scale-95
-        backdrop-blur-sm
+        bg-[rgba(0,0,0,0.55)] text-white
+        hover:bg-[rgba(0,0,0,0.75)] active:scale-95
       `,
       bottom: `
         w-10 h-10 sm:w-11 sm:h-11
-        bg-white/10 text-white
-        hover:bg-white/20 active:scale-95
-        backdrop-blur-sm
+        bg-[rgba(255,255,255,0.12)] text-white
+        hover:bg-[rgba(255,255,255,0.22)] active:scale-95
       `,
     };
 
@@ -278,7 +276,7 @@ export const Lightbox = memo(function Lightbox({
 
       {/* ── Backdrop ── */}
       <div
-        className="lb-enter fixed inset-0 bg-black/92 backdrop-blur-sm"
+        className="lb-enter fixed inset-0 bg-[rgba(0,0,0,0.93)]"
         style={{ zIndex: 1000 }}
         role="dialog"
         aria-modal="true"
@@ -387,10 +385,10 @@ export const Lightbox = memo(function Lightbox({
                 onLoad={() => setIsImageLoaded(true)}
                 className={`
                   absolute inset-0 w-full h-full object-contain rounded-lg
-                  drop-shadow-2xl
                   transition-opacity duration-300
                   ${isImageLoaded ? "opacity-100" : "opacity-0"}
                 `}
+                style={{ boxShadow: "0 25px 60px rgba(0,0,0,0.6)" }}
               />
             </div>
           </div>
