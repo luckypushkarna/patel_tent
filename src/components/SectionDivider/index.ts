@@ -1,0 +1,1 @@
+export { WeddingDivider } from "./WeddingDivider";
