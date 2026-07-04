@@ -22,6 +22,7 @@ import { JsonLd } from "@/components/SEO/JsonLd";
 import { Analytics } from "@/components/SEO/Analytics";
 import { CookieConsent } from "@/components/CookieConsent";
 import { ConfettiOverlay } from "@/components/ConfettiOverlay";
+import { SmoothScrolling } from "@/components/SmoothScrolling";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.pateltent.com"),
@@ -88,11 +89,13 @@ export default function RootLayout({
         className="font-sans antialiased bg-brand-bg text-brand-primary overflow-x-hidden w-full relative"
         suppressHydrationWarning
       >
-        {children}
-        <JsonLd />
-        <Analytics />
-        <CookieConsent />
-        <ConfettiOverlay />
+        <SmoothScrolling>
+          {children}
+          <JsonLd />
+          <Analytics />
+          <CookieConsent />
+          <ConfettiOverlay />
+        </SmoothScrolling>
       </body>
     </html>
   );

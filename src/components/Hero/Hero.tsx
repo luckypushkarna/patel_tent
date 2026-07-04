@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useScroll, useTransform } from "framer-motion";
 import { HeroBackground } from "./HeroBackground";
 import { HeroContent } from "./HeroContent";
+import { WeddingDivider } from "@/components/SectionDivider/WeddingDivider";
 import { About } from "../About";
 
 export function Hero() {
@@ -17,15 +18,13 @@ export function Hero() {
   const overlayOpacity = useTransform(scrollY, [0, vh * 0.40], [0.48, 0.65]);
 
   return (
-    <section
-      ref={containerRef}
-      id="home"
-      aria-label="Patel Tent — Luxury Wedding & Event Management"
-      className="relative w-full bg-[#14100C]"
-    >
-      {/* ── STICKY BACKDROP ────────────────────────────────────────────── */}
-      <div className="sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
-
+    <>
+      <section
+        ref={containerRef}
+        id="home"
+        aria-label="Patel Tent — Luxury Wedding & Event Management"
+        className="sticky top-0 h-[100vh] h-[100dvh] w-full z-0 overflow-hidden bg-[#14100C]"
+      >
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full">
           <HeroBackground overlayOpacity={overlayOpacity} />
@@ -37,12 +36,13 @@ export function Hero() {
             <HeroContent />
           </div>
         </div>
-      </div>
+
+        {/* Wedding Divider anchored to bottom of Hero */}
+        <WeddingDivider />
+      </section>
 
       {/* ── OVERLAY REVEAL (Second Fold) ───────────────────────────────── */}
-      <div className="relative z-20 w-full bg-[#F3EBE1] min-h-screen mt-[50vh]">
-        <About />
-      </div>
-    </section>
+      <About />
+    </>
   );
 }

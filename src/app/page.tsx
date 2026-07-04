@@ -9,6 +9,8 @@ import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { ScrollRestoration } from "@/components/SEO/ScrollRestoration";
 
+import { Preloader } from "@/components/Preloader";
+
 // Below-fold sections — lazy loaded to reduce initial bundle & TTI
 const Services       = dynamic(() => import("@/components/Services").then(m => ({ default: m.Services })));
 const EditorialSection = dynamic(() => import("@/components/Editorial").then(m => ({ default: m.EditorialSection })));
@@ -25,9 +27,10 @@ const belowFoldStyle: React.CSSProperties = {
 export default function Page() {
   return (
     <>
+      <Preloader />
       <ScrollRestoration />
       <Navbar />
-      <main>
+      <main className="relative w-full">
         {/* Hero is above-fold — rendered immediately, not lazy */}
         <Hero />
 

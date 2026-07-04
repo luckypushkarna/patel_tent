@@ -11,6 +11,8 @@ import React from 'react';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedVideo } from '@cloudinary/react';
 
+import { limitFit } from "@cloudinary/url-gen/actions/resize";
+
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'lgnlnsgy';
 // Singleton — module level, never re-created on render
 const cld = new Cloudinary({ cloud: { cloudName } });
@@ -39,7 +41,8 @@ export function CloudinaryVideo({
   const vid = cld
     .video(publicId)
     .format('auto')        // auto delivers WebM when supported (smaller than mp4)
-    .quality('auto:good'); // good quality, significantly smaller files
+    .quality('auto:good')  // good quality, significantly smaller files
+    .resize(limitFit().width(1280)); // caps max width at 1280 to save performance on mobile GPUs
 
   return (
     <AdvancedVideo

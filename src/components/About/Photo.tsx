@@ -17,7 +17,10 @@ interface PhotoProps {
   ratio?: string;
   className?: string;
   objectPosition?: string;
+  objectFit?: "cover" | "contain";
   isVideo?: boolean;
+  loading?: "lazy" | "eager";
+  fetchPriority?: "high" | "low" | "auto";
 }
 
 function PhotoComponent({
@@ -26,7 +29,10 @@ function PhotoComponent({
   ratio = "3/4",
   className = "",
   objectPosition = "center",
+  objectFit = "cover",
   isVideo = false,
+  loading,
+  fetchPriority,
 }: PhotoProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
@@ -43,12 +49,12 @@ function PhotoComponent({
         { scale: 1.2 },
         {
           scale: 1,
-          ease: "power1.out",
+          ease: "none",
           scrollTrigger: {
             trigger: wrapperRef.current,
             start: "top 95%",
             end: "center 40%",
-            scrub: 0.8,
+            scrub: true,
           },
         }
       );
@@ -66,12 +72,18 @@ function PhotoComponent({
     >
       {src ? (
         isVideo ? (
-          <div ref={mediaRef} className="absolute inset-0 h-full w-full">
-            <CloudinaryVideo publicId={src} className="w-full h-full object-cover" style={{ objectPosition }} />
+          <div ref={mediaRef} className="absolute inset-0 h-full w-full will-change-transform">
+            <CloudinaryVideo publicId={src} className={`w-full h-full object-${objectFit} ${objectPosition === 'bottom' ? 'object-bottom' : objectPosition === 'top' ? 'object-top' : 'object-center'}`} />
           </div>
         ) : (
-          <div ref={mediaRef} className="absolute inset-0 h-full w-full">
-            <CloudinaryImage publicId={src} alt={alt} className="w-full h-full object-cover" style={{ objectPosition }} />
+          <div ref={mediaRef} className="absolute inset-0 h-full w-full will-change-transform">
+            <CloudinaryImage 
+              publicId={src} 
+              alt={alt} 
+              className={`w-full h-full object-${objectFit} ${objectPosition === 'bottom' ? 'object-bottom' : objectPosition === 'top' ? 'object-top' : 'object-center'}`} 
+              loading={loading}
+              fetchPriority={fetchPriority}
+            />
           </div>
         )
       ) : (

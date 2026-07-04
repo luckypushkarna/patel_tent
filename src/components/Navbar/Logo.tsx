@@ -9,7 +9,7 @@ function LogoComponent() {
     <Link
       href="/"
       aria-label={`${BRAND.name} — ${BRAND.subtitle}`}
-      className="flex flex-col leading-none select-none"
+      className="flex flex-col items-start justify-center leading-none select-none"
     >
       <span
         className="text-[15px] md:text-[16px] font-bold uppercase tracking-[0.14em] text-[#F6F1E8]"

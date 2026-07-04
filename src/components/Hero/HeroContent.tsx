@@ -15,15 +15,9 @@ import { ArrowRight } from "lucide-react";
 function HeroContentComponent() {
   const heroRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
-  const [hasScrolled, setHasScrolled] = useState(false);
 
   /* ─── Scroll progress tied to the hero section ─────────────────────── */
   const { scrollY } = useScroll();
-
-  // Detect first scroll to hide the scroll indicator
-  useMotionValueEvent(scrollY, "change", (y) => {
-    if (y > 20) setHasScrolled(true);
-  });
 
   // Responsive translation amounts
   const getY = (desktop: number, tablet: number, mobile: number) => {
@@ -59,14 +53,9 @@ function HeroContentComponent() {
   const previewOpacity = useTransform(scrollY, [0, vh * 0.20], [1, 0]);
   const previewY = useTransform(scrollY, [0, vh * 0.25], [0, -(getY(20, 14, 10))]);
 
-  // Smooth springs — eliminate jitter during scroll
-  const sHeadingY = useSpring(headingY, { stiffness: 80, damping: 25, mass: 0.5 });
-  const sSubY = useSpring(subY, { stiffness: 80, damping: 25, mass: 0.5 });
-  const sCtaY = useSpring(ctaY, { stiffness: 80, damping: 25, mass: 0.5 });
-  const sTrustY = useSpring(trustY, { stiffness: 80, damping: 25, mass: 0.5 });
-  const sPreviewY = useSpring(previewY, { stiffness: 80, damping: 25, mass: 0.5 });
-
-  /* ─── Click handlers ────────────────────────────────────────────────── */
+  // Scroll indicator fade
+  const scrollIndicatorOpacity = useTransform(scrollY, [0, 50], [1, 0]);
+  const scrollIndicatorY = useTransform(scrollY, [0, 50], [0, -4]);
   const handleScrollToGallery = () => {
     document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -99,8 +88,8 @@ function HeroContentComponent() {
         flex flex-col items-center text-center
         px-6 sm:px-10
         max-w-[900px] mx-auto
+        -translate-y-2 sm:-translate-y-4 md:-translate-y-8
       "
-      style={{ transform: "translateY(-5vh)" }}
     >
       {/* ── Heading ─────────────────────────────────────────────────── */}
       <motion.h1
@@ -111,19 +100,18 @@ function HeroContentComponent() {
         style={
           prefersReduced
             ? { ...reducedStyle, fontFamily: "'Cormorant Garamond', serif" }
-            : { opacity: headingOpacity, y: sHeadingY, scale: headingScale, fontFamily: "'Cormorant Garamond', serif" }
+            : { opacity: headingOpacity, y: headingY, scale: headingScale, fontFamily: "'Cormorant Garamond', serif" }
         }
         className="
-          font-semibold text-brand-light will-change-transform
-          text-[32px] min-[400px]:text-[38px] sm:text-[44px] md:text-[56px] lg:text-[72px]
-          leading-[1.05] md:leading-[0.95]
-          tracking-[-1px] md:tracking-[-2px]
+          font-semibold text-brand-light
+          text-[30px] min-[400px]:text-[34px] sm:text-[42px] md:text-[50px] lg:text-[58px]
+          leading-[1.15] md:leading-[1.2]
+          tracking-[-0.02em]
         "
       >
-        <span className="block whitespace-nowrap">Beautiful Weddings</span>
-        <span className="block whitespace-nowrap">
-          Thoughtfully <em className="italic text-brand-accent">Designed</em>
-        </span>
+        Beautiful Weddings
+        <br />
+        Thoughtfully <em className="italic text-brand-accent">Designed</em>
       </motion.h1>
 
       {/* ── Subtitle ─────────────────────────────────────────────────── */}
@@ -135,12 +123,12 @@ function HeroContentComponent() {
         style={
           prefersReduced
             ? { ...reducedStyle, fontFamily: "'Inter', sans-serif" }
-            : { opacity: subOpacity, y: sSubY, fontFamily: "'Inter', sans-serif" }
+            : { opacity: subOpacity, y: subY, fontFamily: "'Inter', sans-serif" }
         }
         className="
-          mt-6 sm:mt-8 will-change-transform
-          max-w-[600px]
-          text-[16px] sm:text-[18px]
+          mt-4 sm:mt-6
+          max-w-[500px]
+          text-[14px] sm:text-[16px]
           font-normal leading-[1.6]
           text-brand-light/85
         "
@@ -159,19 +147,19 @@ function HeroContentComponent() {
         style={
           prefersReduced
             ? reducedStyle
-            : { opacity: ctaOpacity, y: sCtaY, scale: ctaScale }
+            : { opacity: ctaOpacity, y: ctaY, scale: ctaScale }
         }
-        className="mt-8 sm:mt-12 flex flex-col items-center w-full will-change-transform"
+        className="mt-6 sm:mt-8 flex flex-col items-center w-full"
       >
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full max-w-[320px] sm:max-w-none">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full max-w-[280px] sm:max-w-none">
           {/* Primary */}
           <button
             onClick={handleScrollToGallery}
             className="
               group flex items-center justify-center gap-2
-              w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-full
+              w-full sm:w-auto px-6 py-3 rounded-full
               bg-[#F5F2EB] text-[#0B3558]
-              text-[14px] sm:text-[15px] font-semibold tracking-wide
+              text-[13px] sm:text-[14px] font-semibold tracking-wide
               md:transition-all md:duration-300 md:ease-out
               md:hover:-translate-y-[2px] md:hover:shadow-[0_8px_20px_rgba(255,255,255,0.2)]
             "
@@ -184,10 +172,10 @@ function HeroContentComponent() {
           <button
             onClick={handleScrollToContact}
             className="
-              w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-full
+              w-full sm:w-auto px-6 py-3 rounded-full
               bg-transparent text-[#F5F2EB]
               border border-[#F5F2EB]/30
-              text-[14px] sm:text-[15px] font-semibold tracking-wide
+              text-[13px] sm:text-[14px] font-semibold tracking-wide
               md:transition-all md:duration-300 md:ease-out
               md:hover:border-[#F5F2EB]/80 md:hover:bg-white/5
             "
@@ -201,9 +189,9 @@ function HeroContentComponent() {
           style={
             prefersReduced
               ? reducedStyle
-              : { opacity: trustOpacity, y: sTrustY }
+              : { opacity: trustOpacity, y: trustY }
           }
-          className="mt-6 text-[12px] sm:text-[13px] text-brand-light/60 tracking-wide text-center will-change-transform"
+          className="mt-5 text-[11px] sm:text-[12px] text-brand-light/60 tracking-wide text-center"
         >
           Wedding &bull; Reception &bull; Haldi &bull; Mehendi &bull; Corporate
         </motion.p>
@@ -218,12 +206,12 @@ function HeroContentComponent() {
         style={
           prefersReduced
             ? reducedStyle
-            : { opacity: previewOpacity, y: sPreviewY }
+            : { opacity: previewOpacity, y: previewY }
         }
         onClick={handleScrollToGallery}
         className="
-          mt-8 md:mt-12 will-change-transform
-          flex flex-row items-center justify-center gap-3 sm:gap-4
+          mt-6 md:mt-8
+          flex flex-row items-center justify-center gap-3
           cursor-pointer group
           px-4 py-2 rounded-2xl
           md:transition-colors md:duration-300 md:hover:bg-white/5
@@ -234,7 +222,7 @@ function HeroContentComponent() {
             (id, i) => (
               <div
                 key={id}
-                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full overflow-hidden border-2 border-[#1D2A39] shadow-sm md:shadow-lg"
+                className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full overflow-hidden border-2 border-[#1D2A39] shadow-sm md:shadow-lg"
                 style={{ zIndex: 30 - i * 10, position: "relative" }}
               >
                 <CloudinaryImage
@@ -250,7 +238,7 @@ function HeroContentComponent() {
             )
           )}
         </div>
-        <span className="text-[13px] sm:text-[14px] font-medium text-brand-light/90 md:group-hover:text-[#C9A86A] md:transition-colors md:duration-300">
+        <span className="text-[12px] sm:text-[13px] font-medium text-brand-light/90 md:group-hover:text-[#C9A86A] md:transition-colors md:duration-300">
           150+ Event Photos &rarr;
         </span>
       </motion.div>
@@ -258,8 +246,9 @@ function HeroContentComponent() {
       {/* ── Scroll Indicator ─────────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: hasScrolled ? 0 : 1, y: hasScrolled ? -4 : 0 }}
-        transition={{ duration: 0.35, ease: "easeOut", delay: hasScrolled ? 0 : 2.0 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: "easeOut", delay: 2.0 }}
+        style={{ opacity: scrollIndicatorOpacity, y: scrollIndicatorY }}
         className="absolute bottom-[-120px] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none"
         aria-hidden="true"
       >

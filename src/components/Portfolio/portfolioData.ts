@@ -127,7 +127,7 @@ export const PORTFOLIO_ITEMS: readonly PortfolioItem[] = [
     location: "Mumbai, Maharashtra",
     category: "sound",
     size: "large",
-    image: "/gallery/12.jpg",
+    image: "event/gallery/new_12",
   },
 ] as const;
 

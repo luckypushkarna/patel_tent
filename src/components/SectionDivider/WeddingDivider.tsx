@@ -36,15 +36,30 @@ export const WeddingDivider = forwardRef<SVGSVGElement>(
     return (
       <div
         aria-hidden="true"
-        className="pointer-events-none relative z-[5] w-full overflow-hidden leading-none"
+        className="pointer-events-none absolute bottom-0 left-0 right-0 w-full z-10 overflow-hidden leading-none"
       >
         <svg
           ref={ref}
           viewBox="0 0 2400 240"
-          preserveAspectRatio="none"
+          preserveAspectRatio="xMidYMax slice"
           xmlns="http://www.w3.org/2000/svg"
-          className="block w-full h-[140px] md:h-[180px] lg:h-[220px]"
+          className="block w-full h-24 sm:h-32 md:h-auto object-cover"
         >
+          <style>
+            {`
+              /* Cluster elements toward the center on mobile so they don't get cropped */
+              @media (max-width: 1024px) {
+                #instruments { transform: translateX(530px); }
+                #buffet { transform: translateX(500px); }
+                #camera { transform: translateX(370px); }
+                #tent { transform: translateX(340px); }
+                
+                #gate { transform: translateX(-300px); }
+                #seating { transform: translateX(-350px); }
+                #umbrella { transform: translateX(-300px); }
+              }
+            `}
+          </style>
 
           {/* ╔══════════════════════════════════════════════════════╗
               ║  LAYER 0 — ROLLING HILLS & GROUND (3 depth curves)  ║

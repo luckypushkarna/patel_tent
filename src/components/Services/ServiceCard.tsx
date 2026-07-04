@@ -1,14 +1,14 @@
 "use client";
 
-import { memo, useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { memo, useRef } from "react";
+import dynamic from "next/dynamic";
 import type { Service } from "./servicesData";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+// Dynamically load the heavy Lottie engine only on the client side without blocking initial render
+const DotLottiePlayer = dynamic(
+  () => import('@dotlottie/react-player').then((mod) => mod.DotLottiePlayer),
+  { ssr: false }
+);
 
 interface ServiceCardProps {
   service: Service;
@@ -23,54 +23,6 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
   const isFeatured = service.span === "featured";
   const isWide = service.span === "wide";
 
-  useEffect(() => {
-    if (!cardRef.current) return;
-
-    const mm = gsap.matchMedia();
-    
-    // Card entrance — staggered fade up (desktop only)
-    mm.add("(min-width: 768px)", () => {
-      gsap.fromTo(
-        cardRef.current,
-        { opacity: 0, y: 60 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.1,
-          ease: "power3.out",
-          delay: (index % 3) * 0.12,
-          scrollTrigger: {
-            trigger: cardRef.current,
-            start: "top 88%",
-            once: true,
-          },
-        }
-      );
-    });
-
-    // Scroll-linked zoom out on image (both mobile and desktop)
-    mm.add("all", () => {
-      if (imgRef.current) {
-        gsap.fromTo(
-          imgRef.current,
-          { scale: 1.2 },
-          {
-            scale: 1,
-            ease: "power1.out",
-            scrollTrigger: {
-              trigger: cardRef.current,
-              start: "top 95%",
-              end: "center 40%",
-              scrub: 0.8,
-            },
-          }
-        );
-      }
-    });
-
-    return () => mm.revert();
-  }, [index]);
-
   return (
     <div
       ref={cardRef}
@@ -78,35 +30,24 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
         group relative flex flex-col
         overflow-hidden
         rounded-[20px]
-        bg-white/[0.06]
-        border border-white/[0.12]
-        shadow-sm
-        md:transition-transform md:duration-300 md:ease-out
-        md:hover:-translate-y-[6px]
-        md:hover:shadow-lg
+        bg-[#FFFFFF]
+        border border-[#032B53]/5
         cursor-pointer
         ${isFeatured ? "lg:col-span-2" : ""}
         ${isWide ? "lg:col-span-2" : ""}
       `}
     >
-      {/* Background Image Wrapper — will-change scoped here only */}
-      <div ref={imgRef} className="absolute inset-0 z-0 w-full h-full will-change-transform">
-        <CloudinaryImage
-          publicId={service.image}
-          alt={service.title}
-          width={800}
-          height={1000}
-          className="absolute inset-0 w-full h-full object-cover"
+      {/* Background Lottie Wrapper */}
+      <div ref={imgRef} className="absolute inset-0 z-0 w-full h-full will-change-transform pointer-events-none opacity-70">
+        <DotLottiePlayer
+          src={service.lottie}
+          loop
+          autoplay
+          className={`w-full h-full object-cover scale-[1.15] ${service.lottieClassName || ""}`}
+          style={{ width: "100%", height: "100%" }}
         />
       </div>
-      {/* Editorial dark gradient overlay */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 z-[1]"
-        style={{
-          background: "linear-gradient(180deg, rgba(0,0,0,0.05), rgba(0,0,0,0.65))"
-        }}
-      />
+
 
       {/* Giant watermark number — 3% opacity behind content */}
       <span
@@ -115,11 +56,9 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
           absolute -bottom-2 -right-1 md:-bottom-4 md:-right-2
           text-[60px] md:text-[100px] lg:text-[120px]
           font-bold leading-none
-          text-white/[0.06]
+          text-[#032B53]/5
           select-none pointer-events-none
           z-0
-          transition-transform duration-[400ms] ease-out
-          group-hover:translate-x-2 group-hover:translate-y-2
         "
         style={{ fontFamily: "'Cormorant Garamond', serif" }}
       >
@@ -132,23 +71,23 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
         {/* Top row — decorative line + number + service label */}
         <div className="flex flex-col gap-1.5 md:gap-2 mb-3 md:mb-6">
           <span
-            className="block w-8 md:w-10 h-px bg-brand-accent transition-all duration-300 ease-out group-hover:w-16"
+            className="block w-8 md:w-10 h-px bg-brand-accent"
             aria-hidden="true"
           />
           <div className="flex items-center gap-2 md:gap-3">
             <span
               className="
                 text-[15px] md:text-[18px] font-bold leading-none
-                text-brand-accent
+                text-[#032B53]/60
                 transition-colors duration-300
               "
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
               {service.number}
             </span>
-            <span className="h-px w-3 md:w-4 bg-white/40" aria-hidden="true" />
+            <span className="h-px w-3 md:w-4 bg-[#032B53]/20" aria-hidden="true" />
             <span 
-              className="text-[12px] md:text-[13px] font-semibold uppercase tracking-[0.22em] text-[#F5F2EB]"
+              className="text-[12px] md:text-[13px] font-semibold uppercase tracking-[0.22em] text-[#032B53]/60"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
               Service
@@ -160,9 +99,7 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
         <div
           className="
             mb-3 md:mb-5
-            text-white
-            md:transition-all md:duration-[400ms] md:ease-out
-            md:group-hover:rotate-[-5deg] md:group-hover:scale-[1.08]
+            text-[#032B53]
             origin-left
           "
         >
@@ -172,12 +109,11 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
         {/* Title — two-line editorial treatment */}
         <h3
           className={`
-            text-[#F8F4EC]
+            text-[#032B53]
             font-bold
             leading-[1.15]
             tracking-[-0.03em]
             mb-2 md:mb-3
-            drop-shadow-[0_1px_4px_rgba(0,0,0,0.25)]
             ${isFeatured
               ? "text-[26px] md:text-[32px] lg:text-[36px] max-w-[460px]"
               : "text-[20px] md:text-[24px] lg:text-[26px] max-w-[320px]"
@@ -191,7 +127,7 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
         {/* Description */}
         <p
           className="
-            text-[rgba(248,244,236,0.85)]
+            text-[#032B53]
             font-sans
             text-[14px]
             font-medium
@@ -210,25 +146,20 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
             mt-auto
             flex items-center gap-2
             text-[10px] md:text-[11.5px] font-semibold uppercase tracking-[0.18em]
-            text-white
-            opacity-0 translate-y-3
-            transition-all duration-[400ms] ease-out
-            group-hover:opacity-100 group-hover:translate-y-0
+            text-[#032B53]
           "
         >
           <span
             className="
               relative after:absolute after:bottom-0 after:left-0
-              after:h-px after:w-0 after:bg-brand-accent
-              after:transition-all after:duration-[350ms] after:ease-out
-              group-hover:after:w-full
+              after:h-px after:w-full after:bg-brand-accent
               pb-[2px]
             "
           >
             View Theme Gallery
           </span>
           <svg
-            className="w-3.5 h-3.5 transition-transform duration-[350ms] group-hover:translate-x-1"
+            className="w-3.5 h-3.5"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"

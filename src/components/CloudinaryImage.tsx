@@ -35,8 +35,8 @@ interface CloudinaryImageProps {
 
 export function CloudinaryImage({
   publicId,
-  width = 800,
-  height = 800,
+  width,
+  height,
   className,
   style,
   alt,
@@ -51,10 +51,20 @@ export function CloudinaryImage({
     .format('auto')          // auto delivers WebP/AVIF when supported
     .quality('auto:good');   // smaller files, still high quality
 
-  if (crop === 'limit') {
-    img = img.resize(limitFit().width(width).height(height));
+  if (width && height) {
+    if (crop === 'limit') {
+      img = img.resize(limitFit().width(width).height(height));
+    } else {
+      img = img.resize(auto().gravity(autoGravity()).width(width).height(height));
+    }
+  } else if (width) {
+    img = img.resize(limitFit().width(width));
+  } else if (height) {
+    img = img.resize(limitFit().height(height));
   } else {
-    img = img.resize(auto().gravity(autoGravity()).width(width).height(height));
+    // CRITICAL: Prevent fetching 4K/raw original uploads. 
+    // Caps the max width to 1600px while dynamically preserving the exact original aspect ratio.
+    img = img.resize(limitFit().width(1600));
   }
 
   return (

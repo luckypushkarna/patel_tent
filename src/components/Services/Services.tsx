@@ -14,36 +14,6 @@ export function Services() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!sectionRef.current) return;
-
-    const ctx = gsap.context(() => {
-      // Header staggered fade-in
-      if (headerRef.current) {
-        gsap.fromTo(
-          headerRef.current.children,
-          { opacity: 0, y: 32 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.1,
-            ease: "power3.out",
-            stagger: 0.14,
-            scrollTrigger: {
-              trigger: headerRef.current,
-              start: "top 82%",
-              once: true,
-            },
-          }
-        );
-      }
-
-      // Background layer animation removed
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   // Separate featured (first), wide, and normal services
   const featured = SERVICES.filter((s) => s.span === "featured");
   const rest = SERVICES.filter((s) => s.span !== "featured");
@@ -132,7 +102,7 @@ export function Services() {
           ref={headerRef}
           className="flex flex-col items-center text-center mb-12 md:mb-16"
         >
-          <span className="opacity-0 flex items-center gap-3 mb-6">
+          <span className="flex items-center gap-3 mb-6">
             <span className="h-px w-8 bg-brand-accent/50" />
             <span className="text-[11px] font-medium uppercase tracking-[0.32em] text-brand-primary/60">
               Our Expertise
@@ -142,7 +112,6 @@ export function Services() {
 
           <h2
             className="
-              opacity-0
               text-brand-primary
               text-[28px] md:text-[36px] lg:text-[42px]
               font-bold
@@ -159,7 +128,6 @@ export function Services() {
 
           <p
             className="
-              opacity-0
               text-brand-muted
               font-sans
               text-[15px]
