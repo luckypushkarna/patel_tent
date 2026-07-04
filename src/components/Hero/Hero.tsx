@@ -1,14 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring, useReducedMotion } from "framer-motion";
+import { useScroll, useTransform } from "framer-motion";
 import { HeroBackground } from "./HeroBackground";
 import { HeroContent } from "./HeroContent";
 import { About } from "../About";
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null);
-  const prefersReduced = useReducedMotion();
 
   const { scrollY } = useScroll();
   const vh = typeof window !== "undefined" ? window.innerHeight : 800;

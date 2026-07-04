@@ -14,7 +14,7 @@ import React from 'react';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { auto, limitFit } from '@cloudinary/url-gen/actions/resize';
 import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
-import { AdvancedImage, lazyload, responsive, placeholder } from '@cloudinary/react';
+import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
 
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'lgnlnsgy';
 // Singleton — created once at module level, never re-created on render
@@ -64,8 +64,7 @@ export function CloudinaryImage({
       className={className || 'w-full h-full object-cover'}
       style={style}
       alt={alt}
-      // @ts-ignore — TS types might lag behind React 18 for this prop
-      fetchPriority={fetchPriority}
+
       onLoad={onLoad}
       {...props}
     />
