@@ -21,6 +21,8 @@ interface PhotoProps {
   isVideo?: boolean;
   loading?: "lazy" | "eager";
   fetchPriority?: "high" | "low" | "auto";
+  width?: number;
+  height?: number;
 }
 
 function PhotoComponent({
@@ -33,6 +35,8 @@ function PhotoComponent({
   isVideo = false,
   loading,
   fetchPriority,
+  width,
+  height,
 }: PhotoProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
@@ -72,14 +76,20 @@ function PhotoComponent({
     >
       {src ? (
         isVideo ? (
-          <div ref={mediaRef} className="absolute inset-0 h-full w-full will-change-transform">
-            <CloudinaryVideo publicId={src} className={`w-full h-full object-${objectFit} ${objectPosition === 'bottom' ? 'object-bottom' : objectPosition === 'top' ? 'object-top' : 'object-center'}`} />
+          <div ref={mediaRef} className="absolute inset-0 h-full w-full">
+            <CloudinaryVideo 
+              publicId={src} 
+              width={width}
+              className={`w-full h-full object-${objectFit} ${objectPosition === 'bottom' ? 'object-bottom' : objectPosition === 'top' ? 'object-top' : 'object-center'}`} 
+            />
           </div>
         ) : (
-          <div ref={mediaRef} className="absolute inset-0 h-full w-full will-change-transform">
+          <div ref={mediaRef} className="absolute inset-0 h-full w-full">
             <CloudinaryImage 
               publicId={src} 
               alt={alt} 
+              width={width}
+              height={height}
               className={`w-full h-full object-${objectFit} ${objectPosition === 'bottom' ? 'object-bottom' : objectPosition === 'top' ? 'object-top' : 'object-center'}`} 
               loading={loading}
               fetchPriority={fetchPriority}

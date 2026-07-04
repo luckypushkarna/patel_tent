@@ -1,14 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ServiceCard } from "./ServiceCard";
 import { SERVICES } from "./servicesData";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export function Services() {
   const sectionRef = useRef<HTMLElement>(null);

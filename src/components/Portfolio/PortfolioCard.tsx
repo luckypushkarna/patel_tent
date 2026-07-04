@@ -19,28 +19,7 @@ function PortfolioCardComponent({ item, onClick }: PortfolioCardProps) {
   const cardRef = useRef<HTMLElement>(null);
   const imgRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!cardRef.current || !imgRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        imgRef.current,
-        { scale: 1.2 },
-        {
-          scale: 1,
-          ease: "power1.out",
-          scrollTrigger: {
-            trigger: cardRef.current,
-            start: "top 95%",
-            end: "center 40%",
-            scrub: 0.8,
-          },
-        }
-      );
-    }, cardRef);
-
-    return () => ctx.revert();
-  }, []);
+  // GSAP scroll zoom removed to make it stock; only CSS hover zoom remains.
 
   return (
     <article

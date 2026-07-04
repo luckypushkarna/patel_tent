@@ -19,35 +19,7 @@ interface PortfolioGridProps {
 function PortfolioGridComponent({ items, filterKey, onItemClick }: PortfolioGridProps) {
   const gridRef = useRef<HTMLDivElement>(null);
 
-  // Re-animate cards whenever the filter changes
-  useEffect(() => {
-    if (!gridRef.current) return;
-    const cards = gridRef.current.querySelectorAll("[data-card]");
-    if (!cards.length) return;
-
-    const mm = gsap.matchMedia();
-
-    mm.add("(min-width: 768px)", () => {
-      gsap.fromTo(
-        cards,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.1,
-          ease: "power3.out",
-          stagger: 0.08,
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: "top 88%",
-            once: false,
-          },
-        }
-      );
-    });
-
-    return () => mm.revert();
-  }, [filterKey]);
+  // No GSAP revealing animations per request to make it stock
 
   if (items.length === 0) {
     return (

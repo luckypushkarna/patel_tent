@@ -96,6 +96,7 @@ export function About() {
                 alt="Patel Tent team preparing a luxury venue"
                 ratio="3/2"
                 objectPosition="bottom"
+                width={1000}
               />
             </div>
 
@@ -141,6 +142,7 @@ export function About() {
                 ratio="4/5"
                 objectPosition="center"
                 isVideo={true}
+                width={800}
               />
             </div>
           </div>

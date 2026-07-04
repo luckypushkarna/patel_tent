@@ -33,33 +33,7 @@ function EditorialCarouselComponent({
     scrollNext,
   } = useCarousel();
 
-  useEffect(() => {
-    if (!scrollRef.current) return;
-
-    const cards = scrollRef.current.querySelectorAll("[data-card]");
-    if (!cards.length) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        cards,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power3.out",
-          stagger: 0.08,
-          scrollTrigger: {
-            trigger: scrollRef.current,
-            start: "top 85%",
-            once: true,
-          },
-        }
-      );
-    }, scrollRef);
-
-    return () => ctx.revert();
-  }, [scrollRef]);
+  // No GSAP revealing animations per request to make it stock
 
   return (
     <>
