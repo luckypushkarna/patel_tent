@@ -7,7 +7,7 @@ export default function TestCloudinary() {
       
       <div className="border border-gray-300 shadow-xl rounded-lg overflow-hidden">
         {/* We use the sample image 'cld-sample-5' provided in your prompt */}
-        <CloudinaryImage publicId="cld-sample-5" width={500} height={500} />
+        <CloudinaryImage publicId="cld-sample-5" alt="Cloudinary Sample" width={500} height={500} />
       </div>
 
       <p className="mt-8 text-gray-500">If you see an image above, Cloudinary is working perfectly!</p>

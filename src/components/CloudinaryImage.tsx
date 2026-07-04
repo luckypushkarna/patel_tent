@@ -8,9 +8,11 @@
  * - quality reduced from 'auto:best' → 'auto:good' (40-60% smaller files, still sharp)
  * - alt is now truly required (enforced by type)
  */
+"use client";
+
 import React from 'react';
 import { Cloudinary } from '@cloudinary/url-gen';
-import { auto } from '@cloudinary/url-gen/actions/resize';
+import { auto, limitFit } from '@cloudinary/url-gen/actions/resize';
 import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
 import { AdvancedImage, lazyload, responsive, placeholder } from '@cloudinary/react';
 
@@ -27,6 +29,8 @@ interface CloudinaryImageProps {
   style?: React.CSSProperties;
   loading?: 'lazy' | 'eager';
   fetchPriority?: 'high' | 'low' | 'auto';
+  crop?: 'fill' | 'limit';
+  onLoad?: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void;
 }
 
 export function CloudinaryImage({
@@ -38,12 +42,20 @@ export function CloudinaryImage({
   alt,
   loading = 'lazy',
   fetchPriority = 'auto',
-}: CloudinaryImageProps) {
-  const img = cld
+  crop = 'fill',
+  onLoad,
+  ...props
+}: CloudinaryImageProps & React.HTMLAttributes<HTMLImageElement>) {
+  let img = cld
     .image(publicId)
     .format('auto')          // auto delivers WebP/AVIF when supported
-    .quality('auto:good')    // smaller files, still high quality
-    .resize(auto().gravity(autoGravity()).width(width).height(height));
+    .quality('auto:good');   // smaller files, still high quality
+
+  if (crop === 'limit') {
+    img = img.resize(limitFit().width(width).height(height));
+  } else {
+    img = img.resize(auto().gravity(autoGravity()).width(width).height(height));
+  }
 
   return (
     <AdvancedImage
@@ -52,8 +64,10 @@ export function CloudinaryImage({
       className={className || 'w-full h-full object-cover'}
       style={style}
       alt={alt}
-      // @ts-ignore — fetchpriority is valid HTML but TS types lag
-      fetchpriority={fetchPriority}
+      // @ts-ignore — TS types might lag behind React 18 for this prop
+      fetchPriority={fetchPriority}
+      onLoad={onLoad}
+      {...props}
     />
   );
 }
