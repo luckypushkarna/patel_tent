@@ -1,15 +1,9 @@
 "use client";
 
 import { memo, useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { CloudinaryImage } from "@/components/CloudinaryImage";
 import { CloudinaryVideo } from "@/components/CloudinaryVideo";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 interface PhotoProps {
   src?: string;
@@ -42,30 +36,9 @@ function PhotoComponent({
   const mediaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!wrapperRef.current || isVideo) return;
-    if (!mediaRef.current) return;
-
-    // Scroll zoom scrub only — no entrance pop-up
-    const mm = gsap.matchMedia();
-    mm.add("all", () => {
-      gsap.fromTo(
-        mediaRef.current,
-        { scale: 1.2 },
-        {
-          scale: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: wrapperRef.current,
-            start: "top 95%",
-            end: "center 40%",
-            scrub: true,
-          },
-        }
-      );
-    });
-
-    return () => mm.revert();
-  }, [isVideo]);
+    // Heavy GSAP scroll scrub animations have been removed to prevent 60fps to 20fps drops.
+    // The image/video simply renders statically now, significantly improving scroll performance.
+  }, []);
 
   return (
     <div
