@@ -10,12 +10,13 @@ interface HeroBackgroundProps {
 
 function HeroBackgroundComponent({ overlayOpacity }: HeroBackgroundProps) {
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="hero-bg-video absolute inset-0 overflow-hidden">
       <CloudinaryVideo
         publicId="event/wdxtdh8ihv"
-        className="absolute inset-0 w-full h-full object-cover object-center"
+        className="hero-bg-video absolute inset-0 w-full h-full object-cover object-center"
         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         preload="auto"
+        width={1920}
       />
 
       {/* ── Scroll-driven cinematic overlay ── */}

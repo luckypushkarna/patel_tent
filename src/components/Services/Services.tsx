@@ -18,70 +18,56 @@ export function Services() {
       id="services"
       aria-label="Our Services & Expertise"
       className="relative w-full bg-brand-bg py-16 md:py-20 lg:py-24 overflow-hidden"
+      style={{
+        // Skip rendering entirely when section is offscreen — biggest single perf win.
+        // containIntrinsicSize prevents layout shift when it re-enters viewport.
+        contentVisibility: "auto",
+        containIntrinsicSize: "0 1200px",
+      }}
     >
       {/* Top Left Frame Ornament */}
-      <div 
-        className="absolute top-0 left-0 w-[320px] h-[320px] md:w-[600px] md:h-[600px] pointer-events-none opacity-90 z-0"
-        style={{
-          maskImage: 'url(/frame-ornament.png)',
-          maskSize: 'contain',
-          maskRepeat: 'no-repeat',
-          maskPosition: 'top left',
-          backgroundColor: '#E6D8C3', // Subtle beige watermark color
-          WebkitMaskImage: 'url(/frame-ornament.png)',
-          WebkitMaskSize: 'contain',
-          WebkitMaskRepeat: 'no-repeat',
-          WebkitMaskPosition: 'top left',
-        }}
-      />
+      <div className="absolute top-0 left-0 w-[240px] h-[240px] md:w-[450px] md:h-[450px] pointer-events-none opacity-30 z-0">
+        <img
+          src="/frame-ornament.png"
+          alt=""
+          className="w-full h-full object-contain object-top-left select-none"
+          loading="lazy"
+          aria-hidden="true"
+        />
+      </div>
 
-      {/* Top Right Frame Ornament (Flipped horizontally) */}
-      <div 
-        className="absolute top-0 right-0 w-[320px] h-[320px] md:w-[600px] md:h-[600px] pointer-events-none opacity-90 z-0 scale-x-[-1]"
-        style={{
-          maskImage: 'url(/frame-ornament.png)',
-          maskSize: 'contain',
-          maskRepeat: 'no-repeat',
-          maskPosition: 'top left', // Keep top left because we are flipping the whole div
-          backgroundColor: '#E6D8C3',
-          WebkitMaskImage: 'url(/frame-ornament.png)',
-          WebkitMaskSize: 'contain',
-          WebkitMaskRepeat: 'no-repeat',
-          WebkitMaskPosition: 'top left',
-        }}
-      />
+      {/* Top Right Frame Ornament */}
+      <div className="absolute top-0 right-0 w-[240px] h-[240px] md:w-[450px] md:h-[450px] pointer-events-none opacity-30 z-0 scale-x-[-1]">
+        <img
+          src="/frame-ornament.png"
+          alt=""
+          className="w-full h-full object-contain object-top-left select-none"
+          loading="lazy"
+          aria-hidden="true"
+        />
+      </div>
 
-      {/* Bottom Left Frame Ornament (Flipped vertically) */}
-      <div 
-        className="absolute bottom-0 left-0 w-[320px] h-[320px] md:w-[600px] md:h-[600px] pointer-events-none opacity-90 z-0 scale-y-[-1]"
-        style={{
-          maskImage: 'url(/frame-ornament.png)',
-          maskSize: 'contain',
-          maskRepeat: 'no-repeat',
-          maskPosition: 'top left',
-          backgroundColor: '#E6D8C3',
-          WebkitMaskImage: 'url(/frame-ornament.png)',
-          WebkitMaskSize: 'contain',
-          WebkitMaskRepeat: 'no-repeat',
-          WebkitMaskPosition: 'top left',
-        }}
-      />
+      {/* Bottom Left Frame Ornament */}
+      <div className="absolute bottom-0 left-0 w-[240px] h-[240px] md:w-[450px] md:h-[450px] pointer-events-none opacity-30 z-0 scale-y-[-1]">
+        <img
+          src="/frame-ornament.png"
+          alt=""
+          className="w-full h-full object-contain object-top-left select-none"
+          loading="lazy"
+          aria-hidden="true"
+        />
+      </div>
 
-      {/* Bottom Right Frame Ornament (Flipped both horizontally & vertically -> rotate-180) */}
-      <div 
-        className="absolute bottom-0 right-0 w-[320px] h-[320px] md:w-[600px] md:h-[600px] pointer-events-none opacity-90 z-0 rotate-180"
-        style={{
-          maskImage: 'url(/frame-ornament.png)',
-          maskSize: 'contain',
-          maskRepeat: 'no-repeat',
-          maskPosition: 'top left',
-          backgroundColor: '#E6D8C3',
-          WebkitMaskImage: 'url(/frame-ornament.png)',
-          WebkitMaskSize: 'contain',
-          WebkitMaskRepeat: 'no-repeat',
-          WebkitMaskPosition: 'top left',
-        }}
-      />
+      {/* Bottom Right Frame Ornament */}
+      <div className="absolute bottom-0 right-0 w-[240px] h-[240px] md:w-[450px] md:h-[450px] pointer-events-none opacity-30 z-0 rotate-180">
+        <img
+          src="/frame-ornament.png"
+          alt=""
+          className="w-full h-full object-contain object-top-left select-none"
+          loading="lazy"
+          aria-hidden="true"
+        />
+      </div>
 
       {/* Faint decorative vertical line */}
       <div

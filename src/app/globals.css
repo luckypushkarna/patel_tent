@@ -116,11 +116,26 @@ section {
   contain: layout;
 }
 
-/* ── Images — prevent layout shift ─────────────────────────────────────── */
-img,
-video {
+/* ── Media elements ────────────────────────────────────────────────────── */
+img {
   max-width: 100%;
   height: auto;
+}
+
+video {
+  max-width: 100%;
+}
+
+/* Universal hero background video & object-cover video fix for all screens (mobile, tablet, desktop) */
+.hero-bg-video,
+.hero-bg-video video,
+video.object-cover {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
 }
 
 /* ── Scrollbar styling (optional, keeps it minimal) ────────────────────── */

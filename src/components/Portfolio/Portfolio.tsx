@@ -86,6 +86,7 @@ export function Portfolio({ limit }: PortfolioProps = {}) {
           onClose={() => setLightboxIndex(null)}
           onNext={() => setLightboxIndex((prev) => (prev !== null ? prev + 1 : null))}
           onPrev={() => setLightboxIndex((prev) => (prev !== null ? prev - 1 : null))}
+          onGoTo={(i) => setLightboxIndex(i)}
         />
       )}
     </section>

@@ -15,8 +15,8 @@ export function Hero() {
   const vh = typeof window !== "undefined" ? window.innerHeight : 800;
 
   /* ── Overlay darkens as user scrolls ─────────────────────────────────
-     Start: rgba(22,20,18, 0.48) → End: rgba(22,20,18, 0.65)            */
-  const overlayOpacity = useTransform(scrollY, [0, vh * 0.40], [0.48, 0.65]);
+     Start: rgba(20,16,12, 0.50) → End: rgba(20,16,12, 0.68)            */
+  const overlayOpacity = useTransform(scrollY, [0, vh * 0.40], [0.50, 0.68]);
 
   return (
     <>

@@ -2,11 +2,12 @@
 
 import { memo, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
+import type { DotLottie } from "@lottiefiles/dotlottie-react";
 import type { Service } from "./servicesData";
 
-// Dynamically load the heavy Lottie engine only on the client side without blocking initial render
-const DotLottiePlayer = dynamic(
-  () => import('@dotlottie/react-player').then((mod) => mod.DotLottiePlayer),
+// Dynamically load the Lottie engine — no SSR, loaded once globally
+const DotLottieReact = dynamic(
+  () => import("@lottiefiles/dotlottie-react").then((mod) => mod.DotLottieReact),
   { ssr: false }
 );
 
@@ -17,39 +18,34 @@ interface ServiceCardProps {
 
 function ServiceCardComponent({ service, index }: ServiceCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const lottieWrapperRef = useRef<HTMLDivElement>(null);
+  // dotLottie instance ref — lets us play/pause without unmounting the canvas
+  const lottieRef = useRef<DotLottie | null>(null);
   const Icon = service.icon;
 
   const isFeatured = service.span === "featured";
   const isWide = service.span === "wide";
 
-  // FIX C3: Only play Lottie when the card is visible in the viewport.
-  // This prevents all 6 Lottie instances from running their JS animation
-  // loops simultaneously when most are off-screen.
+  // ── Intersection: play when visible, pause when not ────────────────────────
+  // NEVER unmount the Lottie component — destroying/recreating the WASM canvas
+  // is the most expensive operation possible. We just pause/play instead.
   useEffect(() => {
-    const wrapper = lottieWrapperRef.current;
-    if (!wrapper) return;
+    const card = cardRef.current;
+    if (!card) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          // DotLottiePlayer renders a <dotlottie-player> custom element
-          const player = wrapper.querySelector("dotlottie-player") as HTMLElement & {
-            play?: () => void;
-            pause?: () => void;
-          };
-          if (!player) return;
-          if (entry.isIntersecting) {
-            player.play?.();
-          } else {
-            player.pause?.();
-          }
-        });
+      ([entry]) => {
+        const anim = lottieRef.current;
+        if (!anim) return;
+        if (entry.isIntersecting) {
+          anim.play();
+        } else {
+          anim.pause();
+        }
       },
-      { rootMargin: "100px 0px" }
+      { rootMargin: "150px 0px", threshold: 0 }
     );
 
-    observer.observe(wrapper);
+    observer.observe(card);
     return () => observer.disconnect();
   }, []);
 
@@ -60,38 +56,53 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
         group relative flex flex-col
         overflow-hidden
         rounded-[20px]
-        bg-[#FFFFFF]
-        border border-[#032B53]/5
+        bg-white
+        border border-[#032B53]/8
         cursor-pointer
         ${isFeatured ? "lg:col-span-2" : ""}
         ${isWide ? "lg:col-span-2" : ""}
       `}
+      // contain:layout prevents this card's layout from affecting siblings on every repaint
+      // will-change is NOT set here — it was creating 6 permanent GPU layers. Only promoted on hover via overlay.
+      style={{ contain: "layout" }}
     >
-      {/* Background Lottie Wrapper */}
-      {/* FIX C4: Removed permanent will-change-transform. Only GPU-promote during hover via CSS. */}
+      {/* ── Background Lottie — always mounted, play/pause via ref ───────── */}
+      {/* devicePixelRatio=1 caps the canvas at logical size (≈300×200px equivalent)
+          instead of the default 1123×688px Retina canvas seen in the profiler.
+          autoResize=false removes per-frame getBoundingClientRect calls. */}
       <div
-        ref={lottieWrapperRef}
-        className="absolute inset-0 z-0 w-full h-full pointer-events-none opacity-70"
+        className="absolute inset-0 z-0 w-full h-full pointer-events-none"
+        style={{ opacity: 0.55 }}
+        aria-hidden="true"
       >
-        <DotLottiePlayer
+        <DotLottieReact
           src={service.lottie}
           loop
-          autoplay
-          className={`w-full h-full object-cover scale-[1.15] ${service.lottieClassName || ""}`}
-          style={{ width: "100%", height: "100%" }}
+          autoplay={false}
+          dotLottieRefCallback={(ref) => { lottieRef.current = ref; }}
+          renderConfig={{
+            autoResize: false,
+            freezeOnOffscreen: true,
+            devicePixelRatio: 1,
+          }}
+          className={`w-full h-full ${service.lottieClassName || ""}`}
+          style={{
+            width: "100%",
+            height: "100%",
+            transform: "scale(1.15)",
+            transformOrigin: "center center",
+          }}
         />
       </div>
 
-      {/* Giant watermark number — 3% opacity behind content */}
+      {/* Giant watermark number */}
       <span
         aria-hidden="true"
         className="
           absolute -bottom-2 -right-1 md:-bottom-4 md:-right-2
           text-[60px] md:text-[100px] lg:text-[120px]
-          font-bold leading-none
-          text-[#032B53]/5
-          select-none pointer-events-none
-          z-0
+          font-bold leading-none text-[#032B53]/5
+          select-none pointer-events-none z-0
         "
         style={{ fontFamily: "'Cormorant Garamond', serif" }}
       >
@@ -99,21 +110,23 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
       </span>
 
       {/* ── Card Content ── */}
-      <div className={`relative z-10 flex flex-col h-full p-5 sm:p-6 md:p-8 lg:p-10 ${isFeatured ? "min-h-[200px] md:min-h-[280px]" : "min-h-[160px] md:min-h-[220px]"}`}>
-
-        {/* Top row — decorative line + number + service label */}
+      <div
+        className={`
+          relative z-10 flex flex-col h-full
+          p-5 sm:p-6 md:p-8 lg:p-10
+          ${isFeatured ? "min-h-[200px] md:min-h-[280px]" : "min-h-[160px] md:min-h-[220px]"}
+        `}
+      >
+        {/* Top row */}
         <div className="flex flex-col gap-1.5 md:gap-2 mb-3 md:mb-6">
           <span
-            className="block w-8 md:w-10 h-px bg-brand-accent"
+            className="block h-px bg-brand-accent"
             aria-hidden="true"
+            style={{ width: "2rem" }}
           />
           <div className="flex items-center gap-2 md:gap-3">
             <span
-              className="
-                text-[15px] md:text-[18px] font-bold leading-none
-                text-[#032B53]/60
-                transition-colors duration-300
-              "
+              className="text-[15px] md:text-[18px] font-bold leading-none text-[#032B53]/60"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
               {service.number}
@@ -129,23 +142,14 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
         </div>
 
         {/* Icon */}
-        <div
-          className="
-            mb-3 md:mb-5
-            text-[#032B53]
-            origin-left
-          "
-        >
+        <div className="mb-3 md:mb-5 text-[#032B53] origin-left">
           <Icon className={isFeatured ? "w-8 h-8 md:w-12 md:h-12" : "w-7 h-7 md:w-10 md:h-10"} />
         </div>
 
-        {/* Title — two-line editorial treatment */}
+        {/* Title */}
         <h3
           className={`
-            text-[#032B53]
-            font-bold
-            leading-[1.15]
-            tracking-[-0.03em]
+            text-[#032B53] font-bold leading-[1.15] tracking-[-0.03em]
             mb-2 md:mb-3
             ${isFeatured
               ? "text-[26px] md:text-[32px] lg:text-[36px] max-w-[460px]"
@@ -158,54 +162,37 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
         </h3>
 
         {/* Description */}
-        <p
-          className="
-            text-[#032B53]
-            font-sans
-            text-[14px]
-            font-medium
-            leading-[1.7]
-            max-w-[420px]
-            mb-4 md:mb-5
-            line-clamp-2 md:line-clamp-none
-          "
-        >
+        <p className="text-[#032B53]/85 font-sans text-[14px] font-medium leading-[1.7] max-w-[420px] mb-4 md:mb-5 line-clamp-2 md:line-clamp-none">
           {service.description}
         </p>
 
-        {/* Bottom CTA link */}
-        <div
-          className="
-            mt-auto
-            flex items-center gap-2
-            text-[10px] md:text-[11.5px] font-semibold uppercase tracking-[0.18em]
-            text-[#032B53]
-          "
-        >
-          <span
-            className="
-              relative after:absolute after:bottom-0 after:left-0
-              after:h-px after:w-full after:bg-brand-accent
-              pb-[2px]
-            "
-          >
+        {/* Bottom CTA */}
+        <div className="mt-auto flex items-center gap-2 text-[10px] md:text-[11.5px] font-semibold uppercase tracking-[0.18em] text-[#032B53]">
+          <span className="relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-brand-accent pb-[2px]">
             View Theme Gallery
           </span>
-          <svg
-            className="w-3.5 h-3.5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
+          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 12h14M13 6l6 6-6 6" />
           </svg>
         </div>
       </div>
+
+      {/* ── Hover effect — pure compositor-only opacity on a single layer ─── */}
+      {/* This is the cheapest possible hover: one opacity transition on an
+          already-composited layer. No box-shadow on the card wrapper, no
+          translate (which would promote 6 layers at once). */}
+      <div
+        className="absolute inset-0 z-[5] pointer-events-none rounded-[20px] opacity-0 group-hover:opacity-100"
+        style={{
+          transition: "opacity 300ms ease",
+          boxShadow: "inset 0 0 0 1px rgba(201,168,106,0.35), 0 16px 36px rgba(3,43,83,0.07)",
+        }}
+        aria-hidden="true"
+      />
     </div>
   );
 }
 
 export const ServiceCard = memo(ServiceCardComponent);
+
+
