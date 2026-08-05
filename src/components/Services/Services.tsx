@@ -17,7 +17,7 @@ export function Services() {
       ref={sectionRef}
       id="services"
       aria-label="Our Services & Expertise"
-      className="relative w-full bg-brand-bg py-16 md:py-20 lg:py-24 overflow-hidden"
+      className="relative w-full bg-[#F3EBE1] py-16 md:py-20 lg:py-24 overflow-hidden"
       style={{
         // Skip rendering entirely when section is offscreen — biggest single perf win.
         // containIntrinsicSize prevents layout shift when it re-enters viewport.

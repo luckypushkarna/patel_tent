@@ -72,7 +72,7 @@ function ServiceCardComponent({ service, index }: ServiceCardProps) {
           autoResize=false removes per-frame getBoundingClientRect calls. */}
       <div
         className="absolute inset-0 z-0 w-full h-full pointer-events-none"
-        style={{ opacity: 0.55 }}
+        style={{ opacity: 1 }}
         aria-hidden="true"
       >
         <DotLottieReact

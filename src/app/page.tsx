@@ -38,9 +38,11 @@ export default function Page() {
         <div style={{ ...belowFoldStyle, containIntrinsicSize: "0 900px" }}>
           <Services />
         </div>
+        {/*
         <div style={{ ...belowFoldStyle, containIntrinsicSize: "0 600px" }}>
           <EditorialSection />
         </div>
+        */}
         <div style={{ ...belowFoldStyle, containIntrinsicSize: "0 1200px" }}>
           <Portfolio limit={9} />
         </div>

@@ -42,7 +42,7 @@ function PortfolioFiltersComponent({
               tracking-[0.02em]
               rounded-full
               transition-all duration-[350ms] ease-out
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F3EBE1]
               ${
                 isActive
                   ? "bg-brand-primary text-brand-light"

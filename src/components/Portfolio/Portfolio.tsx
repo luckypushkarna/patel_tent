@@ -36,7 +36,7 @@ export function Portfolio({ limit }: PortfolioProps = {}) {
     <section
       id="portfolio"
       aria-label="Portfolio gallery of Patel Tent celebrations"
-      className="w-full bg-brand-bg py-12 md:py-20 lg:py-28"
+      className="w-full bg-[#F3EBE1] py-12 md:py-20 lg:py-28"
     >
       <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 xl:px-10">
         <PortfolioHeader />
@@ -69,7 +69,7 @@ export function Portfolio({ limit }: PortfolioProps = {}) {
                 rounded-full
                 transition-all duration-[300ms]
                 hover:opacity-90 hover:shadow-xl hover:-translate-y-0.5
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F3EBE1]
               "
             >
               Explore More
