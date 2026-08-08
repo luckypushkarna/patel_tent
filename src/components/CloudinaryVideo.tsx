@@ -10,8 +10,6 @@
  */
 import React, { useRef, useEffect } from 'react';
 import { Cloudinary } from '@cloudinary/url-gen';
-import { AdvancedVideo } from '@cloudinary/react';
-
 import { limitFit } from "@cloudinary/url-gen/actions/resize";
 
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'lgnlnsgy';
@@ -114,6 +112,8 @@ export function CloudinaryVideo({
     return () => observer.disconnect();
   }, [autoPlay, muted, playsInline]);
 
+  const videoUrl = vid.toURL();
+
   return (
     <div
       ref={wrapperRef}
@@ -121,8 +121,7 @@ export function CloudinaryVideo({
       className={`hero-bg-video relative w-full h-full overflow-hidden ${className || ''}`}
       style={style}
     >
-      <AdvancedVideo
-        cldVid={vid}
+      <video
         className="hero-bg-video absolute inset-0 w-full h-full object-cover object-center"
         style={{
           width: '100%',
@@ -138,6 +137,7 @@ export function CloudinaryVideo({
         playsInline={playsInline}
         preload={preload}
         poster={computedPoster}
+        src={videoUrl}
       />
     </div>
   );

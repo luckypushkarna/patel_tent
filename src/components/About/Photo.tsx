@@ -130,22 +130,11 @@ function PhotoComponent({
         isVideo ? (
           // ── Video — no zoom, no ref ──────────────────────────────────────
           <div className="absolute inset-0 h-full w-full">
-            {src.startsWith("/") ? (
-              <video
-                src={src}
-                className={`w-full h-full object-${objectFit} ${objPos}`}
-                autoPlay
-                loop
-                muted
-                playsInline
-              />
-            ) : (
-              <CloudinaryVideo
-                publicId={src}
-                width={width}
-                className={`w-full h-full object-${objectFit} ${objPos}`}
-              />
-            )}
+            <CloudinaryVideo
+              publicId={src}
+              width={width}
+              className={`w-full h-full object-${objectFit} ${objPos}`}
+            />
             <MediaInfoButton />
           </div>
         ) : (

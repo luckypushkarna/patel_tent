@@ -1,36 +1,24 @@
 "use client";
 
-import { memo, useEffect, useRef } from "react";
+import { memo } from "react";
 import { motion, MotionValue } from "framer-motion";
 import { MediaInfoButton } from "@/components/MediaInfoButton";
+import { CloudinaryVideo } from "@/components/CloudinaryVideo";
 
 interface HeroBackgroundProps {
   overlayOpacity?: MotionValue<number>;
 }
 
 function HeroBackgroundComponent({ overlayOpacity }: HeroBackgroundProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = 0.7;
-    }
-  }, []);
-
   return (
     <div className="hero-bg-video absolute inset-0 overflow-hidden">
-      <video
-        ref={videoRef}
+      <CloudinaryVideo
+        publicId="event/wdxtdh8ihv"
         className="hero-bg-video absolute inset-0 w-full h-full object-cover object-center"
         style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scale(1.01)' }}
         preload="auto"
-        autoPlay
-        loop
-        muted
-        playsInline
-      >
-        <source src="/13430873_1920_1080_60fps.mp4" type="video/mp4" />
-      </video>
+        width={1920}
+      />
 
       {/* ⓘ Media rights notice */}
       <MediaInfoButton corner="bottom-right" />
