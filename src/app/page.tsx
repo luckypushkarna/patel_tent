@@ -5,7 +5,6 @@
  * - content-visibility: auto on below-fold sections (skips rendering until near viewport)
  */
 import dynamic from "next/dynamic";
-import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { ScrollRestoration } from "@/components/SEO/ScrollRestoration";
 
@@ -13,7 +12,7 @@ import { Preloader } from "@/components/Preloader";
 
 // Below-fold sections — lazy loaded to reduce initial bundle & TTI
 const Services       = dynamic(() => import("@/components/Services").then(m => ({ default: m.Services })));
-const EditorialSection = dynamic(() => import("@/components/Editorial").then(m => ({ default: m.EditorialSection })));
+
 const Portfolio      = dynamic(() => import("@/components/Portfolio").then(m => ({ default: m.Portfolio })));
 const Testimonials   = dynamic(() => import("@/components/Testimonials").then(m => ({ default: m.Testimonials })));
 const Contact        = dynamic(() => import("@/components/Contact").then(m => ({ default: m.Contact })));
@@ -29,7 +28,6 @@ export default function Page() {
     <>
       <Preloader />
       <ScrollRestoration />
-      <Navbar />
       <main className="relative w-full">
         {/* Hero is above-fold — rendered immediately, not lazy */}
         <Hero />
@@ -44,7 +42,7 @@ export default function Page() {
         </div>
         */}
         <div style={{ ...belowFoldStyle, containIntrinsicSize: "0 1200px" }}>
-          <Portfolio limit={9} />
+          <Portfolio limit={6} />
         </div>
         <div style={{ ...belowFoldStyle, containIntrinsicSize: "0 500px" }}>
           <Testimonials />

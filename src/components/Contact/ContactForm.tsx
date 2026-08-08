@@ -71,7 +71,7 @@ export function ContactForm() {
       try {
         // Generate the WhatsApp URL
         const whatsappUrl = getWhatsAppUrl(data);
-        
+
         // Show success briefly
         setStatus("success");
         reset();
@@ -177,7 +177,7 @@ export function ContactForm() {
                   type="tel"
                   inputMode="tel"
                   autoComplete="tel"
-                  placeholder="+91 98765 43210"
+                  placeholder="+91 70144 51109"
                   aria-invalid={!!errors.phone}
                   aria-describedby={errors.phone ? "phone-error" : undefined}
                   hasError={!!errors.phone}

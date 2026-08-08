@@ -1,10 +1,11 @@
 "use client";
 
-import { memo, useEffect, useRef } from "react";
+import { memo, useRef } from "react";
 // FIX M4: Removed dead GSAP + ScrollTrigger imports — they were imported but the
 // comment in this file already said "GSAP scroll zoom removed to make it stock".
 import type { PortfolioItem } from "./portfolioData";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { MediaInfoButton } from "@/components/MediaInfoButton";
 
 interface PortfolioCardProps {
   item: PortfolioItem;
@@ -33,8 +34,6 @@ function PortfolioCardComponent({ item, onClick }: PortfolioCardProps) {
         <CloudinaryImage
           publicId={item.image}
           alt={`${item.title} — ${item.location}`}
-          width={800}
-          height={1000}
           className="
             absolute inset-0 w-full h-full object-cover
             md:transition-transform md:duration-[900ms] md:ease-[cubic-bezier(0.22,1,0.36,1)]
@@ -53,6 +52,9 @@ function PortfolioCardComponent({ item, onClick }: PortfolioCardProps) {
           md:group-hover:bg-black/[0.18]
         "
       />
+
+      {/* ⓘ Media rights notice */}
+      <MediaInfoButton />
 
       {/* Bottom gradient — fades in on hover */}
       <div

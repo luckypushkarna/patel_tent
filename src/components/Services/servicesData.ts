@@ -1,6 +1,5 @@
 import {
   MandapIcon,
-  LightingIcon,
   DecorIcon,
   TentIcon,
   SoundIcon,
@@ -15,6 +14,7 @@ export interface Service {
   icon: React.ComponentType<{ className?: string }>;
   lottie: string;
   lottieClassName?: string;
+  lottieScale?: number;
   span?: "normal" | "wide" | "featured";
 }
 
@@ -24,7 +24,7 @@ export const SERVICES: readonly Service[] = [
     number: "01",
     title: "Corporate & Conference",
     description:
-      "Professional setups tailored for corporate events, product launches, and grand conferences with flawless execution.",
+      "Flawless execution for corporate events, product launches, and grand professional conferences.",
     icon: TentIcon,
     lottie: "/lottie/City Skyline Building.lottie",
     lottieClassName: "object-right translate-x-[5%] md:translate-x-[12%] lg:translate-x-[18%]",
@@ -35,7 +35,7 @@ export const SERVICES: readonly Service[] = [
     number: "02",
     title: "Catering",
     description:
-      "Curated multi-cuisine menus, live counters, and refined table service orchestrated by chefs who treat food as ceremony.",
+      "Curated multi-cuisine menus and refined service orchestrated by expert culinary professionals.",
     icon: CateringIcon,
     lottie: "/lottie/Man serving catering food.lottie",
     span: "normal",
@@ -45,7 +45,7 @@ export const SERVICES: readonly Service[] = [
     number: "03",
     title: "Theme Party",
     description:
-      "Immersive themed environments designed with bespoke props, atmospheric lighting, and meticulous attention to detail.",
+      "Immersive themed environments designed with bespoke props and meticulous attention to detail.",
     icon: DecorIcon,
     lottie: "/lottie/congratulation.lottie",
     span: "normal",
@@ -55,7 +55,7 @@ export const SERVICES: readonly Service[] = [
     number: "04",
     title: "Birthday Party Planning",
     description:
-      "From intimate celebrations to grand bashes, we meticulously plan and execute memorable birthdays for all ages.",
+      "Meticulously planned and executed memorable birthday celebrations for all ages and scales.",
     icon: SoundIcon,
     lottie: "/lottie/Happy Birthday!.lottie",
     span: "normal",
@@ -65,9 +65,10 @@ export const SERVICES: readonly Service[] = [
     number: "05",
     title: "Wedding & Engagement",
     description:
-      "Elegant décor and flawless execution for your pre-wedding rituals, grand engagements, and special ceremonies.",
+      "Elegant décor and flawless execution for pre-wedding rituals and grand wedding ceremonies.",
     icon: MandapIcon,
     lottie: "/lottie/Wedding Destination Couple Merriage.lottie",
+    lottieScale: 1.7,
     span: "wide",
   },
   {
@@ -75,7 +76,7 @@ export const SERVICES: readonly Service[] = [
     number: "06",
     title: "Decorations",
     description:
-      "Sculpted florals, bespoke drapery, and layered textures tuned perfectly to your vision and the venue's architecture.",
+      "Sculpted florals, bespoke drapery, and layered textures perfectly tuned to your vision.",
     icon: DecorIcon,
     lottie: "/lottie/Animation - 1705409067911.lottie",
     span: "normal",

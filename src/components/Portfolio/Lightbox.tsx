@@ -11,6 +11,7 @@ import {
 import { createPortal } from "react-dom";
 import type { PortfolioItem } from "./portfolioData";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { MediaInfoButton } from "@/components/MediaInfoButton";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -147,6 +148,7 @@ export const Lightbox = memo(function Lightbox({
   const canPrev = currentIndex > 0;
   const canNext = currentIndex < items.length - 1;
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setMounted(true); }, []);
 
   // ── Crossfade on index change ──────────────────────────────────────────────
@@ -178,6 +180,7 @@ export const Lightbox = memo(function Lightbox({
   useEffect(() => {
     const pre = [currentIndex - 1, currentIndex, currentIndex + 1]
       .filter((i) => i >= 0 && i < items.length);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoaded((p) => { const n = new Set(p); pre.forEach((i) => n.add(i)); return n; });
   }, [currentIndex, items.length]);
 
@@ -327,18 +330,17 @@ export const Lightbox = memo(function Lightbox({
                 key={displayIdx}
                 publicId={item.image}
                 alt={item.title}
-                width={1600}
-                height={1200}
-                crop="limit"
-                loading={loaded.has(displayIdx) ? "eager" : "lazy"}
-                fetchPriority={displayIdx === currentIndex ? "high" : "auto"}
-                onLoad={() => setLoaded((p) => new Set([...p, displayIdx]))}
                 className={imgClass}
                 style={{
+                  objectFit: "contain",
                   borderRadius: 18,
                   boxShadow: "0 36px 90px rgba(0,0,0,0.70), 0 4px 18px rgba(0,0,0,0.4)",
                 }}
+                onLoad={() => setLoaded((p) => new Set([...p, displayIdx]))}
+                fetchPriority={displayIdx === currentIndex ? "high" : "auto"}
               />
+              {/* ⓘ Media rights notice */}
+              <MediaInfoButton corner="bottom-right" />
             </div>
 
             {/* Hidden preloaders for adjacent images */}
@@ -349,7 +351,8 @@ export const Lightbox = memo(function Lightbox({
                     publicId={items[i].image}
                     alt=""
                     width={320}
-                    loading="eager"
+                    height={320}
+                    fetchPriority="high"
                     onLoad={() => setLoaded((p) => new Set([...p, i]))}
                   />
                 </div>
@@ -416,6 +419,7 @@ export const Lightbox = memo(function Lightbox({
                     transform: active ? "scale(1.07)" : "scale(1)",
                     transition: "opacity 220ms ease, transform 220ms ease, border-color 220ms ease",
                     cursor: "pointer", background: "rgba(255,255,255,0.06)", outline: "none",
+                    position: "relative"
                   }}
                   onFocus={(e) => { (e.currentTarget as HTMLButtonElement).style.outline = "2px solid rgba(201,168,106,0.65)"; }}
                   onBlur={(e) => { (e.currentTarget as HTMLButtonElement).style.outline = "none"; }}
@@ -423,7 +427,6 @@ export const Lightbox = memo(function Lightbox({
                   {loaded.has(i) && (
                     <CloudinaryImage
                       publicId={it.image} alt={it.title}
-                      width={110} height={110} crop="fill" loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, memo } from "react";
+import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { NavLinks } from "./NavLinks";
 import { NavButton } from "./NavButton";
@@ -61,8 +62,12 @@ const Hamburger = memo(function Hamburger({ isOpen, onClick }: HamburgerProps) {
 
 export const Navbar = memo(function Navbar() {
   const isScrolled = useScrollNavbar();
+  const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
+  
+  const isHome = pathname === "/";
+  const isSolid = isScrolled || !isHome;
 
   // ── Handlers ──
   const toggleMobile = useCallback(() => {
@@ -127,7 +132,7 @@ export const Navbar = memo(function Navbar() {
           className={`
             absolute inset-x-0 top-0
             transition-[background-color,border-color] duration-300 ease-out
-            ${isScrolled
+            ${isSolid
               ? "bg-[rgba(22,18,14,0.97)] border-b border-white/[0.07] shadow-[0_1px_0_0_rgba(255,255,255,0.04)]"
               : "bg-transparent border-b border-transparent"
             }

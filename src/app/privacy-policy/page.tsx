@@ -43,7 +43,7 @@ export default function PrivacyPolicy() {
               <li><strong>Name:</strong> Patel Tent & Event Management</li>
               <li><strong>Office Address:</strong> CPS School Road, Opp. Divy Jyoti Complex, New Bhupalpura, Rupsagar, Udaipur, Rajasthan 313001, India</li>
               <li><strong>Email:</strong> [Insert Email Address]</li>
-              <li><strong>Phone:</strong> +91 98765 43210</li>
+              <li><strong>Phone:</strong> +91 70144 51109</li>
             </ul>
           </section>
 
@@ -123,7 +123,7 @@ export default function PrivacyPolicy() {
               <li><strong>Right to Grievance Redressal:</strong> You have the right to readily available means of grievance redressal provided by us.</li>
             </ul>
             <p>
-              To exercise any of these rights, please email us at [Insert Email Address] or call us at +91 98765 43210.
+              To exercise any of these rights, please email us at [Insert Email Address] or call us at +91 70144 51109.
             </p>
           </section>
 
@@ -159,7 +159,7 @@ export default function PrivacyPolicy() {
               New Bhupalpura, Rupsagar, Udaipur,<br />
               Rajasthan 313001, India<br />
               Email: [Insert Email Address]<br />
-              Phone: +91 98765 43210
+              Phone: +91 70144 51109
             </address>
           </section>
         </div>

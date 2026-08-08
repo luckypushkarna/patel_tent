@@ -97,7 +97,7 @@ export default function CookiePolicy() {
               5. Contact Us
             </h2>
             <p className="mb-0">
-              If you have any questions about our use of cookies or other technologies, please email us at [Insert Email Address] or call us at +91 98765 43210.
+              If you have any questions about our use of cookies or other technologies, please email us at [Insert Email Address] or call us at +91 70144 51109.
             </p>
           </section>
         </div>

@@ -29,6 +29,7 @@ interface CloudinaryImageProps {
   style?: React.CSSProperties;
   loading?: 'lazy' | 'eager';
   fetchPriority?: 'high' | 'low' | 'auto';
+
   crop?: 'fill' | 'limit';
   onLoad?: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void;
 }
@@ -42,6 +43,7 @@ export function CloudinaryImage({
   alt,
   loading = 'lazy',
   fetchPriority = 'auto',
+
   crop = 'fill',
   onLoad,
   ...props
@@ -74,7 +76,7 @@ export function CloudinaryImage({
       className={className || 'w-full h-full object-cover'}
       style={style}
       alt={alt}
-
+      fetchPriority={fetchPriority}
       onLoad={onLoad}
       {...props}
     />

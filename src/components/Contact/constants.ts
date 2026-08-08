@@ -12,7 +12,7 @@ export const EVENT_TYPES: { value: EventType; label: string }[] = [
 ];
 
 export const CONTACT_INFO = {
-  phone: "+91 98765 43210",
+  phone: "+91 70144 51109",
   email: "hello@pateltent.com",
   address: {
     line1: "Patel Tent & Event Management",
@@ -26,7 +26,7 @@ export const CONTACT_INFO = {
   social: {
     instagram: "https://instagram.com/pateltent",
     facebook: "https://facebook.com/pateltent",
-    whatsapp: "https://wa.me/919876543210",
+    whatsapp: "https://wa.me/917014451109",
   },
 } as const;
 

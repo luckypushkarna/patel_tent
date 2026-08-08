@@ -8,7 +8,7 @@
  * - Added explicit width/height to prevent CLS (Cumulative Layout Shift)
  * - Added IntersectionObserver to only play when visible (saves CPU/GPU on mobile)
  */
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedVideo } from '@cloudinary/react';
 
@@ -52,18 +52,10 @@ export function CloudinaryVideo({
     vid = vid.resize(limitFit().width(width));
   }
 
-  // Poster is computed client-only to avoid SSR/client hydration mismatch.
-  // The Cloudinary SDK's toURL() can produce subtly different strings on server vs client
-  // (e.g. transformation order, encoding). We start with undefined on both sides,
-  // then set the poster after mount — identical SSR output, no React hydration warning.
-  const [computedPoster, setComputedPoster] = useState<string | undefined>(poster);
-
-  useEffect(() => {
-    if (!poster) {
-      setComputedPoster(cld.image(publicId).format('jpg').quality('auto').toURL());
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [publicId]);
+  // Compute poster directly. If the Cloudinary SDK's toURL() produces subtly 
+  // different strings on server vs client, we use suppressHydrationWarning on the 
+  // video tag below to safely ignore the warning without causing a double-render.
+  const computedPoster = poster || cld.image(publicId).format('jpg').quality('auto').toURL();
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -125,6 +117,7 @@ export function CloudinaryVideo({
   return (
     <div
       ref={wrapperRef}
+      suppressHydrationWarning
       className={`hero-bg-video relative w-full h-full overflow-hidden ${className || ''}`}
       style={style}
     >

@@ -23,6 +23,7 @@ import { Analytics } from "@/components/SEO/Analytics";
 import { CookieConsent } from "@/components/CookieConsent";
 import { ConfettiOverlay } from "@/components/ConfettiOverlay";
 import { SmoothScrolling } from "@/components/SmoothScrolling";
+import { Navbar } from "@/components/Navbar";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.pateltent.com"),
@@ -90,6 +91,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <SmoothScrolling>
+          <Navbar />
           {children}
           <JsonLd />
           <Analytics />

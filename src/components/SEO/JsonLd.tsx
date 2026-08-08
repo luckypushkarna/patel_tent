@@ -6,7 +6,7 @@ export function JsonLd() {
     "image": "https://www.pateltent.com/og-image.jpg",
     "@id": "https://www.pateltent.com",
     "url": "https://www.pateltent.com",
-    "telephone": "+919876543210",
+    "telephone": "+917014451109",
     "email": "hello@pateltent.com",
     "address": {
       "@type": "PostalAddress",

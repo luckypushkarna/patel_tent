@@ -4,6 +4,7 @@ import { memo, useRef, useEffect } from "react";
 
 import { CloudinaryImage } from "@/components/CloudinaryImage";
 import { CloudinaryVideo } from "@/components/CloudinaryVideo";
+import { MediaInfoButton } from "@/components/MediaInfoButton";
 
 interface PhotoProps {
   src?: string;
@@ -129,11 +130,23 @@ function PhotoComponent({
         isVideo ? (
           // ── Video — no zoom, no ref ──────────────────────────────────────
           <div className="absolute inset-0 h-full w-full">
-            <CloudinaryVideo
-              publicId={src}
-              width={width}
-              className={`w-full h-full object-${objectFit} ${objPos}`}
-            />
+            {src.startsWith("/") ? (
+              <video
+                src={src}
+                className={`w-full h-full object-${objectFit} ${objPos}`}
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+            ) : (
+              <CloudinaryVideo
+                publicId={src}
+                width={width}
+                className={`w-full h-full object-${objectFit} ${objPos}`}
+              />
+            )}
+            <MediaInfoButton />
           </div>
         ) : (
           // ── Image — zoom wrapper ─────────────────────────────────────────
@@ -160,6 +173,7 @@ function PhotoComponent({
               loading={loading}
               fetchPriority={fetchPriority}
             />
+            <MediaInfoButton />
           </div>
         )
       ) : (

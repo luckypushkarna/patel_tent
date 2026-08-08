@@ -48,7 +48,6 @@ export function Portfolio({ limit }: PortfolioProps = {}) {
 
         <PortfolioGrid
           items={filteredItems}
-          filterKey={activeCategory}
           onItemClick={setLightboxIndex}
         />
 

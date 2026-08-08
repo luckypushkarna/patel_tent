@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { Photo } from "./Photo";
 import { TextBlock } from "./AboutRow";
 import { Speaker1, Speaker2 } from "./DecorativeSpeakers";
@@ -90,15 +91,22 @@ export function About() {
             <Speaker1 className="absolute top-0 left-0 -translate-x-[45%] -translate-y-[45%] w-32 h-32 md:w-64 md:h-64 pointer-events-none -rotate-12 z-0 opacity-60" />
 
             {/* LEFT — Wide landscape image */}
-            <div className="lg:col-span-7 relative z-10">
+            <motion.div
+              initial={{ y: -60, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, margin: "-10%" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-7 relative z-10"
+            >
               <Photo
-                src="event/about/bou4dkq7ytcft3ftlofb"
+                src="/team.mp4"
                 alt="Patel Tent team preparing a luxury venue"
                 ratio="3/2"
-                objectPosition="bottom"
+                objectPosition="center"
+                isVideo={true}
                 width={1000}
               />
-            </div>
+            </motion.div>
 
             {/* RIGHT — Text, offset downward for editorial rhythm */}
             <div className="lg:col-span-5 lg:pt-24 relative z-10">
@@ -137,7 +145,7 @@ export function About() {
             {/* RIGHT — Grand showcase image/video */}
             <div className="lg:col-span-7">
               <Photo
-                src="event/about/themed-venue"
+                src="/Tailored themes.mp4"
                 alt="Themed wedding venue with luxury lighting"
                 ratio="4/5"
                 objectPosition="center"

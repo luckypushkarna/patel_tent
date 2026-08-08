@@ -9,7 +9,7 @@ export const FOOTER_NAV: readonly FooterLink[] = [
 ] as const;
 
 export const FOOTER_CONTACT = {
-  phone: "+91 98765 43210",
+  phone: "+91 70144 51109",
   email: "hello@pateltent.com",
   address: "Udaipur, Rajasthan",
   hoursDays: "Mon – Sun",
@@ -29,7 +29,7 @@ export const FOOTER_SOCIALS: readonly SocialLink[] = [
   },
   {
     label: "WhatsApp",
-    href: "https://wa.me/919876543210",
+    href: "https://wa.me/917014451109",
     icon: "whatsapp",
   },
 ] as const;
